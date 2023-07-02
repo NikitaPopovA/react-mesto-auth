@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
+
 export default function Login({ onLogin, isLoginSucceed }) {
   const {
     register,
@@ -27,7 +28,7 @@ export default function Login({ onLogin, isLoginSucceed }) {
       <form
         className="login__form auth__form"
         onSubmit={handleSubmit(onSubmit)}
-      >
+      > 
         <label className="form__label">
           <input
             {...register("email", {

@@ -35,17 +35,19 @@ function App() {
   const [isLoginSucceed, setIsLoginSuceed] = useState(true);
   const history = useHistory();
 
-  useEffect(() => {
-    Promise.all([api.getProfileInfo(), api.getCardsInfo()])
-      .then(([dataUser, dataCards]) => {
-        setCurrentUser(dataUser);
-        setCards(dataCards);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    tokenCheck();
-  }, []);
+  useEffect(() => { 
+    if (loggedIn) {
+      Promise.all([api.getProfileInfo(), api.getCardsInfo()]) 
+        .then(([dataUser, dataCards]) => { 
+          setCurrentUser(dataUser); 
+          setCards(dataCards); 
+        }) 
+        .catch((err) => { 
+          console.log(err); 
+        }); 
+    }
+    tokenCheck(); 
+  }, [loggedIn]);
 
   function handleLogin(password, email) {
     loginApi(password, email)
@@ -63,9 +65,12 @@ function App() {
       })
       .catch((error) => {
         console.log(error);
+        setIsInfoTooltipOpen(true);
+        setIsSubmitSucceed(false);
       });
   }
 
+  
   const tokenCheck = () => {
     const jwt = localStorage.getItem("jwt");
     if (!jwt) return;
@@ -262,6 +267,12 @@ function App() {
           </Route>
           <Route path="/sign-in">
             <Login onLogin={handleLogin} isLoginSucceed={isLoginSucceed} />
+            <InfoTooltip
+              name="info-tooltip"
+              isSubmitSucceed={isSubmitSucceed}
+              isOpen={isInfoTooltipOpen}
+              onClose={closeInfoToolTip}
+            />
           </Route>
         </Switch>
         <Footer />
